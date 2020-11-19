@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="commons-io-1.4">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/web/src/main/resources/static/kindeditor/jsp/lib/commons-io-1.4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
