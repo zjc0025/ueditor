@@ -17,7 +17,7 @@
     "scrawlFieldName": "upfile",
     "scrawlPathFormat": "/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
     "scrawlMaxSize": 2048000,
-    "scrawlUrlPrefix": "",
+    "scrawlUrlPrefix": "http://localhost:8100",
     "scrawlInsertAlign": "none",
 
 

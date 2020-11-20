@@ -1,5 +1,7 @@
 package com.xxx.web.controller;
 
+import com.xxx.web.utils.Base64Utils;
+import com.xxx.web.utils.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.poifs.filesystem.DirectoryEntry;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +48,6 @@ public class UeditorController {
         InputStream fis = classPathResource.getInputStream();
         StringWriter writer = new StringWriter();
         IOUtils.copy(fis, writer, StandardCharsets.UTF_8.name());
-        String str = writer.toString();
 //        String str = "{\n" +
 //                "            \"imageActionName\": \"uploadimage\",\n" +
 //                "                \"imageFieldName\": \"upfile\", \n" +
@@ -56,7 +58,7 @@ public class UeditorController {
 //                "                \"imageInsertAlign\": \"none\", \n" +
 //                "                \"imageUrlPrefix\": \"http://localhost:8100\",\n" +
 //                "                \"imagePathFormat\": \"/ueditor/jsp/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}\" }";
-        return str;
+        return writer.toString();
     }
 
     /**
@@ -67,14 +69,13 @@ public class UeditorController {
      * @Date 2020/11/19 15:22
      **/
     @ResponseBody
-    @PostMapping("/uploadimage")
-    public Map<String, String> uploadFile(MultipartFile upfile) throws IOException {
+    @PostMapping("/uploadImage")
+    public Map<String, String> uploadImage(MultipartFile upfile) throws IOException {
         String oldName = upfile.getOriginalFilename();
         String newName = UUID.randomUUID().toString();
         newName += oldName.substring(oldName.lastIndexOf("."));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String dataPath = sdf.format(new Date());
-        boolean uploadRes = false;
 
         File parentDir = new File("D:\\sound-path" + File.separator + dataPath);
         if (!parentDir.exists()) {
@@ -107,24 +108,21 @@ public class UeditorController {
 
         ServletOutputStream out = null;
         FileInputStream ips = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String dataPath = sdf.format(new Date());
+        String path = null;
         try {
             File directory = new File("");//参数为空
             String courseFile = directory.getCanonicalPath();//标准的路径
 
-            String path = courseFile + "/web/src/main/resources/test-file/111.jpg";
+            path = courseFile + "/web/src/main/resources/test-file/111.jpg";
             ips = new FileInputStream(new File(path));
-            //获取图片存放路径
-//            ips = new FileInputStream(new File("D:\\sound-path" + File.separator + dataPath + File.separator + "111.png"));
-//            response.setContentType("audio/mpeg");
+
             out = response.getOutputStream();
 
             IOUtils.copy(ips, out);
 
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("文件读取错误！文件路径【】");
+            log.error("文件读取错误！文件路径【{}】", path);
         }
     }
 
@@ -179,14 +177,13 @@ public class UeditorController {
      * @Date 2020/11/19 15:23
      **/
     @ResponseBody
-    @PostMapping("/uploadvideo")
-    public Map<String, String> uploadvideo(MultipartFile upfile) throws IOException {
+    @PostMapping("/uploadVideo")
+    public Map<String, String> uploadVideo(MultipartFile upfile) throws IOException {
         String oldName = upfile.getOriginalFilename();
         String newName = UUID.randomUUID().toString();
         newName += oldName.substring(oldName.lastIndexOf("."));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String dataPath = sdf.format(new Date());
-        boolean uploadRes = false;
 
         File parentDir = new File("D:\\sound-path" + File.separator + dataPath);
         if (!parentDir.exists()) {
@@ -205,7 +202,7 @@ public class UeditorController {
     }
 
     /**
-     * @param imgId, response
+     * @param fileId, response
      * @return void
      * @author ZJC
      * @Description 获取视频（用于回显）
@@ -213,33 +210,88 @@ public class UeditorController {
      **/
     @ResponseBody
     @GetMapping("/getVideo")
-    public void getVideo(String imgId, HttpServletResponse response) {
-        response.setContentType("video/mp4");
-        //todo: 根据文件id获取路径
-        log.info("根据文件id获取图片路径【{}】", imgId);
+    public void getVideo(String fileId, HttpServletRequest request, HttpServletResponse response) {
+//        response.setContentType("video/mp4");
+        //todo: 根据文件id获取路径(查数据库等)
+        log.info("根据文件id获取图片路径【{}】", fileId);
 
-        ServletOutputStream out = null;
-        FileInputStream ips = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String dataPath = sdf.format(new Date());
+        String path = null;
         try {
             File directory = new File("");//参数为空
             String courseFile = directory.getCanonicalPath();//标准的路径
 
-            String path = courseFile + "/web/src/main/resources/test-file/111.mp4";
-            ips = new FileInputStream(new File(path));
+            path = courseFile + "/web/src/main/resources/test-file/111.mp4";
+//            path = courseFile + "/web/src/main/resources/test-file/222.mp3";
 
-            //获取图片存放路径
-//            ips = new FileInputStream(new File("D:\\sound-path" + File.separator + dataPath + File.separator + "111.mp4"));
-//            ips = new FileInputStream(new File("D:\\sound-path" + File.separator + dataPath + File.separator + "222.mp3"));
+            ResponseUtil.breakPointWrite(request, response, path);
+
+        } catch (Exception e) {
+            log.error("文件读取错误！文件路径【{}】", path);
+        }
+    }
+
+
+    /**
+     * @param upfile
+     * @return java.util.Map<java.lang.String, java.lang.String>
+     * @author ZJC
+     * @Description 上传涂鸦 涂鸦是base64字符串
+     * @Date 2020/11/19 15:22
+     **/
+    @ResponseBody
+    @PostMapping("/uploadScrawl")
+    public Map<String, String> uploadScrawl(String upfile) throws IOException {
+
+        String newName = UUID.randomUUID().toString();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String dataPath = sdf.format(new Date());
+
+        File parentDir = new File("D:\\sound-path" + File.separator + dataPath);
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+        Base64Utils.generateImage(upfile, "D:\\sound-path" + File.separator + dataPath + File.separator + newName + ".jpg");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("state", "SUCCESS");
+        map.put("url", "/getScrawl?imgId=123");
+        map.put("title", newName);
+        map.put("original", newName);
+        return map;
+
+    }
+
+    /**
+     * @param imgId, response
+     * @return void
+     * @author ZJC
+     * @Description 获取图片（回显图片）
+     * @Date 2020/11/19 15:22
+     **/
+    @ResponseBody
+    @GetMapping("/getScrawl")
+    public void getScrawl(String imgId, HttpServletResponse response) {
+        //todo: 根据图片id获取图片路径
+        log.info("根据图片id获取图片路径【{}】", imgId);
+
+        ServletOutputStream out = null;
+        FileInputStream ips = null;
+        String path = null;
+        try {
+            File directory = new File("");//参数为空
+            String courseFile = directory.getCanonicalPath();//标准的路径
+
+            path = courseFile + "/web/src/main/resources/test-file/111.jpg";
+            ips = new FileInputStream(new File(path));
 
             out = response.getOutputStream();
 
             IOUtils.copy(ips, out);
 
         } catch (Exception e) {
-            log.error("文件读取错误！文件路径【】");
+            e.printStackTrace();
+            log.error("文件读取错误！文件路径【{}】", path);
         }
     }
-
 }

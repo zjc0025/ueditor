@@ -26,9 +26,11 @@
         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
         UE.Editor.prototype.getActionUrl = function(action) {
             if (action == 'uploadimage'){
-                return '/uploadimage'; /* 你自己的图片上传action */
+                return '/uploadImage'; /* 你自己的图片上传action */
             }else if (action == 'uploadvideo'){
-                return '/uploadvideo'; /* 你自己的图片上传action */
+                return '/uploadVideo'; /* 你自己的视频上传action */
+            }else if (action == 'uploadscrawl'){
+                return '/uploadScrawl'; /* 你自己的涂鸦上传action */
             }else{
                 return this._bkGetActionUrl.call(this, action);
             }
