@@ -294,4 +294,64 @@ public class UeditorController {
             log.error("文件读取错误！文件路径【{}】", path);
         }
     }
+
+    /**
+     * @param file
+     * @return java.util.Map<java.lang.String, java.lang.String>
+     * @author ZJC
+     * @Description 上传音频
+     * @Date 2020/11/19 15:22
+     **/
+    @ResponseBody
+    @PostMapping("/uploadAudio")
+    public Map<String, String> uploadAudio(MultipartFile file) throws IOException {
+        String oldName = file.getOriginalFilename();
+        String newName = UUID.randomUUID().toString();
+        newName += oldName.substring(oldName.lastIndexOf("."));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String dataPath = sdf.format(new Date());
+
+        File parentDir = new File("D:\\sound-path" + File.separator + dataPath);
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+
+        file.transferTo(new File("D:\\sound-path" + File.separator + dataPath + File.separator + newName));
+
+        Map<String, String> map = new HashMap<>();
+        map.put("state", "SUCCESS");
+        map.put("url", "/getAudio?imgId=123");
+        map.put("title", newName);
+        map.put("original", newName);
+        return map;
+
+    }
+
+    /**
+     * @param audioId, response
+     * @return void
+     * @author ZJC
+     * @Description 获取音频
+     * @Date 2020/11/19 15:22
+     **/
+    @ResponseBody
+    @GetMapping("/getAudio")
+    public void getAudio(String audioId, HttpServletRequest request, HttpServletResponse response) {
+        //todo: 根据id获取音频路径
+        log.info("根据图片id获取图片路径【{}】", audioId);
+
+        String path = null;
+        try {
+            File directory = new File("");//参数为空
+            String courseFile = directory.getCanonicalPath();//标准的路径
+
+            path = courseFile + "/web/src/main/resources/test-file/录音.mp3";
+
+            ResponseUtil.breakPointWrite(request, response, path);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("文件读取错误！文件路径【{}】", path);
+        }
+    }
+
 }

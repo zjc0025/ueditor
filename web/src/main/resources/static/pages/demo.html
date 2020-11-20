@@ -31,7 +31,10 @@
                 return '/uploadVideo'; /* 你自己的视频上传action */
             }else if (action == 'uploadscrawl'){
                 return '/uploadScrawl'; /* 你自己的涂鸦上传action */
-            }else{
+            }else if (action == 'uploadaudio'){
+                return '/uploadAudio'; /* 你自己的涂鸦上传action */
+            }
+            else{
                 return this._bkGetActionUrl.call(this, action);
             }
         };

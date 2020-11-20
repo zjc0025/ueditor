@@ -78,6 +78,12 @@
         ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid",
         ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
         ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml"
-    ]
+    ],
+
+    "audioActionName": "uploadaudio",
+    "audioFieldName": "file",
+    "audioMaxSize": 30720000,
+    "audioAllowFiles": [".mp3", ".wma", ".wav", ".amr"],
+    "audioUrlPrefix": "http://localhost:8100"
 
 }

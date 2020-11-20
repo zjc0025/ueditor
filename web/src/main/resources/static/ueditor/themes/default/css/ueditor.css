@@ -1901,3 +1901,19 @@ div.edui-box {
 .edui-default  .edui-pastecontainer .edui-button  .edui-state-hover .edui-plaintxticon{
     background-position: -72px -34px;
 }
+
+/*增加插入音频按钮图标及页面窗口的相关样式*/
+.edui-default  .edui-for-insertaudio .edui-icon {
+    background-position: -320px -20px;
+}
+
+/*audio-dialog*/
+.edui-default .edui-for-insertaudio .edui-dialog-content {
+    width: 590px;
+    height: 390px;
+}
+
+/* audio*/
+.edui-default  .edui-for-insertaudio .edui-icon {
+    background-image: url(../images/audio.png) !important;
+}

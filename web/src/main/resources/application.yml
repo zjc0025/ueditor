@@ -3,8 +3,6 @@ server:
   servlet:
     session:
       timeout: 50400s
-      cookie:
-        name: ecc-web
 
 #热部署生效
 spring:
@@ -12,7 +10,7 @@ spring:
     restart:
       enabled: true
       #设置重启的目录
-      additional-paths: src/main/java
+      additional-paths: src/main/java,resources/**,static/**,templates/**
   servlet:
     multipart:
       max-file-size: 500MB
