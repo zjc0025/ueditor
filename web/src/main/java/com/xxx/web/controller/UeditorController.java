@@ -266,7 +266,7 @@ public class UeditorController {
      * @param imgId, response
      * @return void
      * @author ZJC
-     * @Description 获取图片（回显图片）
+     * @Description 获取涂鸦（回显图片）
      * @Date 2020/11/19 15:22
      **/
     @ResponseBody
