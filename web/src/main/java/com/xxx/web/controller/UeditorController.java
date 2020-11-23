@@ -197,6 +197,8 @@ public class UeditorController {
         map.put("url", "/getVideo?imgId=123");
         map.put("title", newName);
         map.put("original", newName);
+        String suffix = oldName.substring(oldName.lastIndexOf(".")+1);
+        map.put("type", suffix.equals("mp3")?suffix:"");
         return map;
 
     }

@@ -297,7 +297,8 @@
                 url: uploadDir + file.url,
                 width:width,
                 height:height,
-                align:align
+                align:align,
+                type:file.type
             });
         }
 
